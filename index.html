@@ -176,6 +176,9 @@ footer img{width:40px;height:40px;border-radius:8px}
 footer b{color:var(--ink);font-size:.95rem}
 footer .lic{grid-column:1/-1;line-height:1.5}
 footer a{color:inherit}
+footer .soc{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px}
+footer .soc a{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink);text-decoration:none;font-size:.9rem}
+footer .soc a:hover{border-color:var(--muted)}
 .toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--toast-bg);color:var(--toast-ink);
   padding:10px 16px;border-radius:12px;font-size:.9rem;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px);overflow-wrap:anywhere;z-index:20}
 .toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto;user-select:all}
@@ -228,7 +231,11 @@ footer a{color:inherit}
   <footer>
     <img src="assets/logo-icon.png" alt="">
     <b>The Median Canadian</b>
-    <span class="lic">Text and charts: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, share and adapt with credit. Code: Apache License 2.0. Data belongs to its publishers, and each week's site lists its sources. Photos in the cover slides are licensed separately and are not covered by CC BY 4.0.</span>
+    <nav class="soc" aria-label="Follow and contact">
+      <a href="https://www.instagram.com/mediancanadian/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg>Instagram</a>
+      <a href="mailto:info@mediancanadian.ca"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 6.5 12 13l8.5-6.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>info@mediancanadian.ca</a>
+    </nav>
+    <span class="lic">© 2026 The Median Canadian. Text and charts: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, share and adapt with credit. Code: Apache License 2.0. Data belongs to its publishers, and each week's site lists its sources. Photos in the cover slides are licensed separately and are not covered by CC BY 4.0.</span>
   </footer>
 </div>
 <div class="toast" id="toast" role="status"></div>
