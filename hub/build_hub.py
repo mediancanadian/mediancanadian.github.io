@@ -238,7 +238,7 @@ assert "@@" not in page, re.findall(r"@@\w+@@", page)
 assert "\u2014" not in page, "em dash in page"
 head, body = page.split("<!--BODY-->")
 desc = "A curious Canadian explaining Canada through numbers, every week."
-meta = (f'<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+meta = (f'<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<meta name="robots" content="noai, noimageai">\n'
         f'<meta name="color-scheme" content="light dark">\n<link rel="canonical" href="{SITE}">\n'
         f'<meta property="og:type" content="website">\n<meta property="og:site_name" content="The Median Canadian">\n'
         f'<meta property="og:title" content="The Median Canadian">\n<meta property="og:description" content="{desc}">\n'
