@@ -8,6 +8,7 @@ Each week's story has its own repository, with its page, data, analysis code and
 
 | Week | Story | Where |
 |---|---|---|
+| 3 | How B.C. elected a Conservative majority, October 24, 2026 | [bc-election-oct26](https://github.com/mediancanadian/bc-election-oct26) |
 | 2 | Talking trade with Türkiye, October 2026 | [canada-turkey-oct26](https://github.com/mediancanadian/canada-turkey-oct26) |
 | 1 | Alberta's separation vote, October 19, 2026 | [ab-referendum-live](https://github.com/mediancanadian/ab-referendum-live) |
 
@@ -17,9 +18,10 @@ Each week's story has its own repository, with its page, data, analysis code and
 
 To rebuild it:
 
-1. Clone weeks 1 and 2 into this folder (git ignores them):
+1. Clone every week into this folder (git ignores them):
    `git clone https://github.com/mediancanadian/ab-referendum-live ab-referendum-live`
    `git clone https://github.com/mediancanadian/canada-turkey-oct26 canada-turkey-oct26`
+   `git clone https://github.com/mediancanadian/bc-election-oct26 bc-election-oct26`
 2. `pip install pillow`
 3. `python3 hub/build_hub.py`
 
@@ -30,4 +32,5 @@ Every week: its cover slide (the first image of the Instagram post) in `covers/`
 - **Code:** Apache License 2.0 (LICENSE and NOTICE).
 - **Text, charts, maps and slides:** CC BY 4.0 (LICENSE-CONTENT.md).
 - **Photo in the week 2 cover slide:** Anıtkabir, Ankara, by Nicoleon on Wikimedia Commons, CC0 1.0.
+- **Photo in the week 3 cover slide:** the Parliament Buildings, Victoria, by dronepicr on Wikimedia Commons, CC BY 2.0 (https://commons.wikimedia.org/wiki/File:Legislative_Assembly_of_British_Columbia_Vancouver_island_(29786723167).jpg).
 - **Data:** belongs to its publishers; each week's folder lists its sources and their licences.

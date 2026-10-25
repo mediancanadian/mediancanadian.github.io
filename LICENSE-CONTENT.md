@@ -8,8 +8,9 @@ You can share and adapt them, including commercially, as long as you give credit
 
 ## Photos
 
-The cover slides in `covers/` are CC BY 4.0 except for the photo in the week 2 cover, which is "Anıtkabir 2025" by
-Nicoleon on Wikimedia Commons, under CC0 1.0. The week 1 cover has no photo.
+The cover slides in `covers/` are CC BY 4.0 except for their photos. The photo in the week 2 cover is "Anıtkabir 2025" by
+Nicoleon on Wikimedia Commons, under CC0 1.0. The photo in the week 3 cover is "Legislative Assembly of British Columbia
+Vancouver island (29786723167)" by dronepicr on Wikimedia Commons, under CC BY 2.0. The week 1 cover has no photo.
 
 ## Code and data
 

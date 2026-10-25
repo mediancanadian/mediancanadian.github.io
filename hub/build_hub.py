@@ -7,9 +7,10 @@ site, and the build stops if a published finding no longer holds for the data.
 Usage, from the repository root:
   python3 hub/build_hub.py      writes index.html
 
-Weeks 1 and 2 live in their own repositories: clone https://github.com/mediancanadian/ab-referendum-live into
-ab-referendum-live/ and https://github.com/mediancanadian/canada-turkey-oct26 into canada-turkey-oct26/ at the repository
-root first (git ignores both folders). Needs Python 3 and Pillow.
+Each week lives in its own repository: clone https://github.com/mediancanadian/ab-referendum-live into
+ab-referendum-live/, https://github.com/mediancanadian/canada-turkey-oct26 into canada-turkey-oct26/ and
+https://github.com/mediancanadian/bc-election-oct26 into bc-election-oct26/ at the repository root first (git ignores
+these folders). Needs Python 3 and Pillow.
 """
 import html, json, math, re
 from decimal import Decimal, ROUND_HALF_UP
@@ -18,11 +19,12 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://mediancanadian.ca/"
-AB, TK = ROOT / "ab-referendum-live", ROOT / "canada-turkey-oct26"
+AB, TK, BC = ROOT / "ab-referendum-live", ROOT / "canada-turkey-oct26", ROOT / "bc-election-oct26"
 # where each week's site lives: (link from the hub, absolute address for sharing)
 WEEK_URL = {
     1: ("https://mediancanadian.ca/ab-referendum-live/", "https://mediancanadian.ca/ab-referendum-live/"),
     2: ("https://mediancanadian.ca/canada-turkey-oct26/", "https://mediancanadian.ca/canada-turkey-oct26/"),
+    3: ("https://mediancanadian.ca/bc-election-oct26/", "https://mediancanadian.ca/bc-election-oct26/"),
 }
 E = html.escape
 NUMW = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
@@ -150,9 +152,29 @@ for c in CH2:
 assert len(w2_find) == 8, len(w2_find)
 
 # =====================================================================================
+# Week 3: B.C.'s 2026 provincial election (the slides' own words, as the week 3 page shows them)
+# =====================================================================================
+assert (BC / "data" / "slide_text.json").exists(), "clone https://github.com/mediancanadian/bc-election-oct26 into bc-election-oct26/ first"
+T3 = json.load(open(BC / "data" / "slide_text.json", encoding="utf-8"))
+site3 = (BC / "index.html").read_text(encoding="utf-8")
+hero3 = re.search(r'<section class="hero" id="result">\s*<div class="kick">(.*?)</div>', site3, re.S)
+assert hero3, "the week 3 page has no hero kicker"
+w3_find = []
+for k in T3["order"]:
+    assert f'id="{k}"' in site3, f"chapter {k} not found on the week 3 page"
+    f = dict(k=fill(hero3.group(1)) if k == "result" else T3["kickers"][k], h=T3["headlines"][k], l=T3["lines"][k], a=f"#{k}")
+    assert json.dumps(f["h"], ensure_ascii=False)[1:-1] in site3, f"week 3 headline not on the page: {f['h']}"
+    w3_find.append(f)
+assert len(w3_find) == 8, len(w3_find)
+
+# =====================================================================================
 # Posts, newest first. Every week: its folder, one entry here and its cover slide in covers/.
 # =====================================================================================
 POSTS = [
+    dict(n=3, folder="bc-election-oct26", title="How B.C. elected a Conservative majority", place="British Columbia", period="October 24, 2026",
+         tags=["Elections"],
+         alt="Week 3 cover: B.C. elects Conservatives, the party's first majority since 1928, after nine years of NDP government.",
+         find=w3_find),
     dict(n=2, folder="canada-turkey-oct26", title="Talking trade with Türkiye", place="Canada and Türkiye", period="October 2026",
          tags=["Trade", "Travel", "Energy"],
          alt="Week 2 cover: Talking trade with Türkiye. A Canadian PM's first bilateral visit brought agreements on flights, energy and defence.",
