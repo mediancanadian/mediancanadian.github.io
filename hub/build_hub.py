@@ -8,9 +8,10 @@ Usage, from the repository root:
   python3 hub/build_hub.py      writes index.html
 
 Each week lives in its own repository: clone https://github.com/mediancanadian/ab-referendum-live into
-ab-referendum-live/, https://github.com/mediancanadian/canada-turkey-oct26 into canada-turkey-oct26/ and
-https://github.com/mediancanadian/bc-election-oct26 into bc-election-oct26/ at the repository root first (git ignores
-these folders). Needs Python 3 and Pillow.
+ab-referendum-live/, https://github.com/mediancanadian/canada-turkey-oct26 into canada-turkey-oct26/,
+https://github.com/mediancanadian/bc-election-oct26 into bc-election-oct26/ and
+https://github.com/mediancanadian/canada-wildfires-2026 into canada-wildfires-2026/ at the repository root first
+(git ignores these folders). Needs Python 3 and Pillow.
 """
 import html, json, math, re
 from decimal import Decimal, ROUND_HALF_UP
@@ -19,13 +20,11 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://mediancanadian.ca/"
-AB, TK, BC = ROOT / "ab-referendum-live", ROOT / "canada-turkey-oct26", ROOT / "bc-election-oct26"
-# where each week's site lives: (link from the hub, absolute address for sharing)
-WEEK_URL = {
-    1: ("https://mediancanadian.ca/ab-referendum-live/", "https://mediancanadian.ca/ab-referendum-live/"),
-    2: ("https://mediancanadian.ca/canada-turkey-oct26/", "https://mediancanadian.ca/canada-turkey-oct26/"),
-    3: ("https://mediancanadian.ca/bc-election-oct26/", "https://mediancanadian.ca/bc-election-oct26/"),
-}
+AB, TK, BC, WF = ROOT / "ab-referendum-live", ROOT / "canada-turkey-oct26", ROOT / "bc-election-oct26", ROOT / "canada-wildfires-2026"
+# where each post's site lives, by its repository (several posts can share a week number): (link from the hub,
+# absolute address for sharing)
+POST_URL = {f: (f"https://mediancanadian.ca/{f}/", f"https://mediancanadian.ca/{f}/")
+            for f in ("ab-referendum-live", "canada-turkey-oct26", "bc-election-oct26", "canada-wildfires-2026")}
 E = html.escape
 NUMW = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
 HERO_N = 3  # the carousel shows the newest three posts
@@ -168,9 +167,31 @@ for k in T3["order"]:
 assert len(w3_find) == 8, len(w3_find)
 
 # =====================================================================================
-# Posts, newest first. Every week: its folder, one entry here and its cover slide in covers/.
+# Week 3, October 29, 2026: Canada's wildfires, 2023 to 2026 (the slides' own words, data/slide_text.json)
+# =====================================================================================
+assert (WF / "data" / "slide_text.json").exists(), "clone https://github.com/mediancanadian/canada-wildfires-2026 into canada-wildfires-2026/ first"
+TW = json.load(open(WF / "data" / "slide_text.json", encoding="utf-8"))
+sitew = (WF / "index.html").read_text(encoding="utf-8")
+chw = {m.group(1): (fill(m.group(2)), fill(m.group(3))) for m in
+       re.finditer(r'<article class="ch" id="(c\d+)">.*?<span class="chK">(.*?)</span>\s*<h2 class="chH">(.*?)</h2>', sitew, re.S)}
+# the page fills its numbers in the browser, so headings are compared word for word without the numbers
+words = lambda t: [w for w in re.findall(r"[A-Za-z']+", t) if w not in ("million", "billion")]
+ww_find = []
+for k in TW["order"]:
+    assert k in chw, f"chapter {k} not found on the wildfire page"
+    assert chw[k][0] == TW["kickers"][k], f"wildfire chapter {k} label differs: {chw[k][0]} / {TW['kickers'][k]}"
+    assert words(chw[k][1]) == words(TW["headlines"][k]), f"wildfire chapter {k} heading differs: {chw[k][1]} / {TW['headlines'][k]}"
+    ww_find.append(dict(k=TW["kickers"][k], h=TW["headlines"][k], l=TW["lines"][k], a=f"#{k}"))
+assert len(ww_find) == 8, len(ww_find)
+
+# =====================================================================================
+# Posts, newest first. Every post: its folder, one entry here and its cover slide in covers/.
 # =====================================================================================
 POSTS = [
+    dict(n=3, folder="canada-wildfires-2026", title="Canada's wildfires, 2023 to 2026", place="Canada", period="October 30, 2026",
+         tags=["Nature", "Climate", "Health"], cover="covers/week-03-wildfires-cover.jpg",
+         alt="Week 3 cover: From the forest to our homes. Canada's wildfires, 2023 to 2026.",
+         find=ww_find),
     dict(n=3, folder="bc-election-oct26", title="How B.C. elected a Conservative majority", place="British Columbia", period="October 24, 2026",
          tags=["Elections"],
          alt="Week 3 cover: B.C. elects Conservatives, the party's first majority since 1928, after nine years of NDP government.",
@@ -183,17 +204,18 @@ POSTS = [
          tags=["Elections"],
          alt="Week 1 cover: Albertans rejected the separation process three to one.", find=w1_find),
 ]
-# Every week's folder in the repository needs its card here and its cover slide in covers/.
+# Every post's folder in the repository needs its card here and its cover slide in covers/.
 week_dirs = sorted(x.name for x in ROOT.iterdir() if x.is_dir() and (x / "index.html").exists())
 missing = [w for w in week_dirs if w not in {p["folder"] for p in POSTS}]
 assert not missing, f"week folders without a hub card (add them to POSTS with their cover in covers/): {missing}"
 assert [p["n"] for p in POSTS] == sorted((p["n"] for p in POSTS), reverse=True), "POSTS must be newest first"
 for p in POSTS:
-    p["href"], p["share"] = WEEK_URL[p["n"]]
-    found = sorted((ROOT / "covers").glob(f"week-{p['n']:02d}-cover.*"))
-    assert found, f"no cover slide for week {p['n']} in covers/"
+    p["href"], p["share"] = POST_URL[p["folder"]]
+    # a second post in the same week names its own cover; otherwise the week's cover is covers/week-NN-cover.*
+    found = [ROOT / p["cover"]] if p.get("cover") else sorted((ROOT / "covers").glob(f"week-{p['n']:02d}-cover.*"))
+    assert found and found[0].exists(), f"no cover slide for {p['folder']} in covers/"
     im = Image.open(found[0]).convert("RGB")
-    assert abs(im.width / im.height - 0.8) < 0.01, f"week {p['n']} cover is not 4:5 ({im.size})"
+    assert abs(im.width / im.height - 0.8) < 0.01, f"{p['folder']} cover is not 4:5 ({im.size})"
     p["cover"] = "covers/" + found[0].name     # one file serves the slide and the list
     p["thumb"] = f'<img src="{p["cover"]}" alt="" width="240" height="300" decoding="async">'
 
@@ -238,7 +260,7 @@ for i, p in enumerate(hero_posts):
         <span class="cta">Explore<span class="cta-long">&nbsp;the story</span>{ICON["arrow"]}</span>
       </div>
     </a>''')
-bars = "".join(f'<button class="bar" type="button" aria-label="Show week {p["n"]}"><i><b></b></i></button>' for p in hero_posts)
+bars = "".join(f'<button class="bar" type="button" aria-label="Show week {p["n"]}: {E(p["title"])}"><i><b></b></i></button>' for p in hero_posts)
 
 wm_light, wm_dark, icon = "assets/logo.png", "assets/logo-dark.png", "assets/logo-icon.png"
 tags = sorted({t for p in POSTS for t in p["tags"]}, key=lambda t: (-sum(t in p["tags"] for p in POSTS), t))
