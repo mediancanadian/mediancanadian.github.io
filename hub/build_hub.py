@@ -9,8 +9,9 @@ Usage, from the repository root:
 
 Each week lives in its own repository: clone https://github.com/mediancanadian/ab-referendum-live into
 ab-referendum-live/, https://github.com/mediancanadian/canada-turkey-oct26 into canada-turkey-oct26/,
-https://github.com/mediancanadian/bc-election-oct26 into bc-election-oct26/ and
-https://github.com/mediancanadian/canada-wildfires-2026 into canada-wildfires-2026/ at the repository root first
+https://github.com/mediancanadian/bc-election-oct26 into bc-election-oct26/,
+https://github.com/mediancanadian/canada-wildfires-2026 into canada-wildfires-2026/ and
+https://github.com/mediancanadian/canada-energy-nov26 into canada-energy-nov26/ at the repository root first
 (git ignores these folders). Needs Python 3 and Pillow.
 """
 import html, json, math, re
@@ -24,7 +25,7 @@ AB, TK, BC, WF = ROOT / "ab-referendum-live", ROOT / "canada-turkey-oct26", ROOT
 # where each post's site lives, by its repository (several posts can share a week number): (link from the hub,
 # absolute address for sharing)
 POST_URL = {f: (f"https://mediancanadian.ca/{f}/", f"https://mediancanadian.ca/{f}/")
-            for f in ("ab-referendum-live", "canada-turkey-oct26", "bc-election-oct26", "canada-wildfires-2026")}
+            for f in ("ab-referendum-live", "canada-turkey-oct26", "bc-election-oct26", "canada-wildfires-2026", "canada-energy-nov26")}
 E = html.escape
 NUMW = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
 HERO_N = 3  # the carousel shows the newest three posts
@@ -185,9 +186,29 @@ for k in TW["order"]:
 assert len(ww_find) == 8, len(ww_find)
 
 # =====================================================================================
+# Week 5, November 13, 2026: Canada's energy, province by province (the slides' own words, data/slide_text.json)
+# =====================================================================================
+EN = ROOT / "canada-energy-nov26"
+assert (EN / "data" / "slide_text.json").exists(), "clone https://github.com/mediancanadian/canada-energy-nov26 into canada-energy-nov26/ first"
+TE = [s for s in json.load(open(EN / "data" / "slide_text.json", encoding="utf-8"))["slides"] if s["id"] >= 1]
+sitee = html.unescape((EN / "index.html").read_text(encoding="utf-8")).replace("\u2019", "'").replace("’", "'")
+EN_ANCHORS = ["cable", "scale", "sources", "supply", "inside", "fromabroad", "abroad", "uranium", "technology", "next", "back"]
+assert len(TE) == len(EN_ANCHORS), (len(TE), len(EN_ANCHORS))
+en_find = []
+for s_, a in zip(TE, EN_ANCHORS):
+    assert f'id="{a}"' in sitee, f"chapter {a} not found on the energy page"
+    missing_w = [w for w in words(s_["headline"]) if w not in sitee]
+    assert not missing_w, f"energy chapter {a}: headline words not on the page: {missing_w}"
+    en_find.append(dict(k=s_["kicker"], h=s_["headline"], l=s_["line"], a=f"#{a}"))
+
+# =====================================================================================
 # Posts, newest first. Every post: its folder, one entry here and its cover slide in covers/.
 # =====================================================================================
 POSTS = [
+    dict(n=5, folder="canada-energy-nov26", title="Canada's energy landscape explained", place="Canada", period="November 13, 2026",
+         tags=["Energy", "Trade"], cover="covers/week-05-cover.jpg",
+         alt="Week 5 cover: Canada's energy landscape explained. What each province makes, and who it powers.",
+         find=en_find),
     dict(n=3, folder="canada-wildfires-2026", title="Canada's wildfires, 2023 to 2026", place="Canada", period="October 30, 2026",
          tags=["Nature", "Climate", "Health"], cover="covers/week-03-wildfires-cover.jpg",
          alt="Week 3 cover: From the forest to our homes. Canada's wildfires, 2023 to 2026.",

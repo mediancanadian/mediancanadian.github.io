@@ -33,4 +33,5 @@ Every week: its cover slide (the first image of the Instagram post) in `covers/`
 - **Text, charts, maps and slides:** CC BY 4.0 (LICENSE-CONTENT.md).
 - **Photo in the week 2 cover slide:** Anıtkabir, Ankara, by Nicoleon on Wikimedia Commons, CC0 1.0.
 - **Photo in the week 3 cover slide:** the Parliament Buildings, Victoria, by dronepicr on Wikimedia Commons, CC BY 2.0 (https://commons.wikimedia.org/wiki/File:Legislative_Assembly_of_British_Columbia_Vancouver_island_(29786723167).jpg).
+- **Photo in the week 5 cover slide:** the Daniel-Johnson dam, Quebec, by Hayden Soloviev on Wikimedia Commons, CC BY 4.0 (https://commons.wikimedia.org/wiki/File:Le_barrage_Daniel-Johnson.jpg).
 - **Data:** belongs to its publishers; each week's folder lists its sources and their licences.
