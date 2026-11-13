@@ -46,6 +46,12 @@ a{-webkit-tap-highlight-color:transparent}
 .jump{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
 .dek{margin:-8px 0 2px;color:var(--muted);font-size:.95rem;text-wrap:balance}
 
+/* tabs: the sister site, the same tabs as on the AI Brief */
+.tabs{display:flex;gap:22px;margin-top:-6px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.tabs a{font-size:1rem;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap}
+.tabs a:hover{color:var(--ink)}
+.tabs a[aria-current="page"]{color:var(--ink)}
+
 /* carousel: each post's cover slide, like a story */
 .hero{position:relative;color:var(--h-ink);background:var(--h-bg);padding-block:8px 16px;
   margin-left:calc(-1*max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1*max(16px,env(safe-area-inset-right,0px)))}
@@ -164,6 +170,8 @@ footer a{color:inherit}
 footer .soc{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px}
 footer .soc a{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink);text-decoration:none;font-size:.9rem}
 footer .soc a:hover{border-color:var(--muted)}
+footer .also{grid-column:1/-1;margin:0;line-height:1.5}
+footer .also a{color:var(--ink);font-weight:700}
 .toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--toast-bg);color:var(--toast-ink);
   padding:10px 16px;border-radius:12px;font-size:.9rem;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px);overflow-wrap:anywhere;z-index:20}
 .toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto;user-select:all}
@@ -177,6 +185,7 @@ footer .soc a:hover{border-color:var(--muted)}
     <div class="wm"><img class="wm-light" src="@@WM_LIGHT@@" alt="The Median Canadian"><img class="wm-dark" src="@@WM_DARK@@" alt="The Median Canadian"></div>
     <button class="jump" id="jump" type="button" aria-label="Search posts">@@ICON_SEARCH@@</button>
   </header>
+  <nav class="tabs" aria-label="The Median Canadian sites"><a href="https://mediancanadian.ca/" aria-current="page">The Median Canadian</a><a href="https://ai.mediancanadian.ca/">AI Brief</a></nav>
   <p class="dek">A curious Canadian explaining Canada through numbers, every week.</p>
 
   <section class="hero" id="hero" aria-roledescription="carousel" aria-label="Newest posts">
@@ -204,6 +213,7 @@ footer .soc a:hover{border-color:var(--muted)}
       <a href="https://www.instagram.com/mediancanadian/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg>Instagram</a>
       <a href="mailto:info@mediancanadian.ca"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 6.5 12 13l8.5-6.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>info@mediancanadian.ca</a>
     </nav>
+    <p class="also"><a href="https://ai.mediancanadian.ca/">AI Brief</a>: what moved in AI yesterday, and what it means for your product.</p>
     <span class="lic">© 2026 The Median Canadian. Text and charts: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, share and adapt with credit. Code: Apache License 2.0. Data belongs to its publishers, and each week's site lists its sources. Photos in the cover slides are licensed separately and are not covered by CC BY 4.0.</span>
   </footer>
 </div>
