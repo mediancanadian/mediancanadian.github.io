@@ -10,8 +10,9 @@ Usage, from the repository root:
 Each week lives in its own repository: clone https://github.com/mediancanadian/ab-referendum-live into
 ab-referendum-live/, https://github.com/mediancanadian/canada-turkey-oct26 into canada-turkey-oct26/,
 https://github.com/mediancanadian/bc-election-oct26 into bc-election-oct26/,
-https://github.com/mediancanadian/canada-wildfires-2026 into canada-wildfires-2026/ and
-https://github.com/mediancanadian/canada-energy-nov26 into canada-energy-nov26/ at the repository root first
+https://github.com/mediancanadian/canada-wildfires-2026 into canada-wildfires-2026/,
+https://github.com/mediancanadian/canada-energy-nov26 into canada-energy-nov26/ and
+https://github.com/mediancanadian/canada-inflation-nov1626 into canada-inflation-nov1626/ at the repository root first
 (git ignores these folders). Needs Python 3 and Pillow.
 """
 import html, json, math, re
@@ -25,7 +26,7 @@ AB, TK, BC, WF = ROOT / "ab-referendum-live", ROOT / "canada-turkey-oct26", ROOT
 # where each post's site lives, by its repository (several posts can share a week number): (link from the hub,
 # absolute address for sharing)
 POST_URL = {f: (f"https://mediancanadian.ca/{f}/", f"https://mediancanadian.ca/{f}/")
-            for f in ("ab-referendum-live", "canada-turkey-oct26", "bc-election-oct26", "canada-wildfires-2026", "canada-energy-nov26")}
+            for f in ("ab-referendum-live", "canada-turkey-oct26", "bc-election-oct26", "canada-wildfires-2026", "canada-energy-nov26", "canada-inflation-nov1626")}
 E = html.escape
 NUMW = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
 HERO_N = 3  # the carousel shows the newest three posts
@@ -202,9 +203,29 @@ for s_, a in zip(TE, EN_ANCHORS):
     en_find.append(dict(k=s_["kicker"], h=s_["headline"], l=s_["line"], a=f"#{a}"))
 
 # =====================================================================================
+# Week 6, November 16, 2026: Canada's inflation explained (the slides' own words, data/slide_text.json)
+# =====================================================================================
+INF = ROOT / "canada-inflation-nov1626"
+assert (INF / "data" / "slide_text.json").exists(), "clone https://github.com/mediancanadian/canada-inflation-nov1626 into canada-inflation-nov1626/ first"
+TI = [s for s in json.load(open(INF / "data" / "slide_text.json", encoding="utf-8")) if 2 <= s["n"] <= 14]
+sitei = html.unescape((INF / "index.html").read_text(encoding="utf-8")).replace("\u2019", "'").replace("’", "'")
+INF_ANCHORS = ["cart", "mix", "range", "energy", "why", "bank", "fall", "goal", "pay", "money", "cap", "works", "level"]
+assert len(TI) == len(INF_ANCHORS), (len(TI), len(INF_ANCHORS))
+inf_find = []
+for s_, a in zip(TI, INF_ANCHORS):
+    assert f'id="{a}"' in sitei, f"chapter {a} not found on the inflation page"
+    missing_w = [w for w in words(s_["headline"]) if w not in sitei]
+    assert not missing_w, f"inflation chapter {a}: headline words not on the page: {missing_w}"
+    inf_find.append(dict(k=s_["kicker"], h=s_["headline"].rstrip("."), l=s_["lines"][0], a=f"#{a}"))
+
+# =====================================================================================
 # Posts, newest first. Every post: its folder, one entry here and its cover slide in covers/.
 # =====================================================================================
 POSTS = [
+    dict(n=6, folder="canada-inflation-nov1626", title="Canada's inflation explained", place="Canada", period="November 16, 2026",
+         tags=["Economy", "Prices"], cover="covers/week-06-cover.jpg",
+         alt="Week 6 cover: Canada's inflation was 3.1% in October.",
+         find=inf_find),
     dict(n=5, folder="canada-energy-nov26", title="Canada's energy landscape explained", place="Canada", period="November 13, 2026",
          tags=["Energy", "Trade"], cover="covers/week-05-cover.jpg",
          alt="Week 5 cover: Canada's energy landscape explained. What each province makes, and who it powers.",
